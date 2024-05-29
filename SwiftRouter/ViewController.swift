@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 //        // 带参数
 //        ZYFRouter.openURL(RouterURLString.to_ViewController,context: ["id":"123"])
         // 带参数 带返回值
-        ZYFRouter.openURL(RouterURLString.to_ViewController, context: ["id": "123", "onCompletion": { (returnedValue: String) in
+        ZYFRouter.openURL(RouterURLString.to_ViewController(idStr: "123",type: .open), context: ["id": "123", "onCompletion": { (returnedValue: String) in
             // 处理返回值
             print("Returned value: \(returnedValue)")
         }], openType: .push)

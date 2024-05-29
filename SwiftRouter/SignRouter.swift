@@ -12,7 +12,21 @@ enum RouterType: Int {
 }
 // url 路径地址
 class RouterURLString: NSObject {
-    static let to_ViewController = "myapp://vc"
+    enum RouterUrlType: Int {
+        case register
+        case open
+    }
+    
+    // let to_ViewController = "myapp://vc/<int:id>" // 添加路径参数  "myapp://vc/<int: id>" 外部拉起app页面时添加路径参数更友好
+    static func to_ViewController(idStr: String = "",type: RouterUrlType = .open) -> String {
+        switch type {
+        case .register:
+            return "myapp://vc/<int:id>"
+        case .open:
+            return "myapp://vc/\(idStr)"
+        }
+    }
+    
     static let to_LoginViewController = "myapp://login"
 }
 class SignRouter {
@@ -24,9 +38,11 @@ class SignRouter {
     // 注册
     func registerRoutes() {
         // 方式一 用于注册一个 URL 路由，并返回一个视图控制器实例
-        navigator.register(RouterURLString.to_ViewController) { url, values, context in
-            guard let dic = context as? [String: Any] else {return nil}
+        navigator.register(RouterURLString.to_ViewController(type: .register)) { url, values, context in
+            guard let userID = values["id"] as? Int else { return nil } // 解析路径参数
+            print("======asdf===\(userID)")
             
+            guard let dic = context as? [String: Any] else {return nil}
             let login = LoginViewController()
             if let idStr = dic["id"] as? String {
                 login.idstr = idStr
@@ -39,7 +55,7 @@ class SignRouter {
         }
 
         // 方式二 用于注册一个 URL 路由，并执行一个闭包来处理该 URL   以open方式打开
-        navigator.handle(RouterURLString.to_ViewController) { url, values, context in
+        navigator.handle(RouterURLString.to_LoginViewController) { url, values, context in
             guard let dic = context as? [String: Any] else {return true}
             
             let login = LoginViewController()
